@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsch Diktat - B2/C1 Training</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>DailyDeutsch 🇩🇪</h1>
+            <span class="subtitle">B2-C1 Intensive Listening Practice</span>
+        </div>
+        <div id="status-text">Select a topic</div>
+    </header>
+
+    <div id="topics-view">
+        <h2 style="margin-bottom: 20px;">All Topics</h2>
+        <div class="grid" id="topics-grid">
+            </div>
+        
+        <div class="custom-section">
+            <h3>Create Custom Lesson</h3>
+            <p class="hint-text">Paste German text here (e.g. from DW, Tagesschau, or ChatGPT):</p>
+            <textarea id="custom-text-input" placeholder="Paste German text here..."></textarea>
+            <br>
+            <button class="btn-primary" onclick="startCustomLesson()" style="margin-top:10px;">Start Practice</button>
+        </div>
+    </div>
+
+    <!-- Metadata / Save Form (hidden by default) -->
+    <div id="meta-form" class="modal" style="display:none;">
+        <div class="modal-card">
+            <h3>Create Topic</h3>
+            <p class="hint-text">Fill in the topic information to save this lesson to your topics list.</p>
+            <label>Title</label>
+            <input type="text" id="meta-title" placeholder="e.g. Nachrichten vom 21.11" />
+            <label>Level</label>
+            <select id="meta-level">
+                <option value="B2">B2</option>
+                <option value="C1">C1</option>
+                <option value="Custom" selected>Custom</option>
+            </select>
+            <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+                <button class="btn-outline" onclick="cancelMetaForm()">Cancel</button>
+                <button class="btn-primary" onclick="saveTopicFromForm()">Save Topic</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="player-view">
+        <div class="nav-link" onclick="goHome()">← Back to Topics</div>
+        <div class="player-card">
+            <div class="player-header">
+                <span id="sentence-counter">1 / 10</span>
+                <span id="vocab-level">Level: C1</span>
+            </div>
+            
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+            <div class="controls">
+                <button class="btn-primary" onclick="playAudio()">▶ Play Audio</button>
+                <select id="speed-rate">
+                    <option value="0.8">0.8x (Slow)</option>
+                    <option value="1.0" selected>1.0x (Normal)</option>
+                    <option value="1.2">1.2x (Fast)</option>
+                </select>
+            </div>
+
+            <p class="hint-text">Hint: Listen and type exactly what you hear.</p>
+            <textarea id="user-input" placeholder="Type what you hear..."></textarea>
+
+            <div class="feedback-area" id="feedback"></div>
+
+            <div class="action-row">
+                <button class="btn-outline" onclick="prevSentence()" id="btn-prev">← Previous</button>
+                <button class="btn-primary" onclick="checkAnswer()" id="btn-check" style="min-width: 120px;">Check</button>
+                <button class="btn-outline" onclick="nextSentence()" id="btn-next">Next →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
