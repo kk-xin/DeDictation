@@ -24,6 +24,7 @@ let currentIndex = 0;
 let synthesis = window.speechSynthesis;
 let library = []; // runtime merged library (preloaded + user)
 let pendingCustomText = null; // temporary holder for text when opening metadata form
+let editMode = false; // when true, show delete buttons on user topics
 
 // --- 3. INIT ---
 function loadUserTopics() {
@@ -54,15 +55,59 @@ function renderTopics() {
     library.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'card';
-        card.onclick = () => startLesson(index);
+        // In edit mode clicking the card should not start the lesson
+        if (editMode) {
+            card.onclick = null;
+            card.setAttribute('disabled', 'true');
+            card.style.cursor = 'default';
+        } else {
+            card.onclick = () => startLesson(index);
+            card.removeAttribute('disabled');
+            card.style.cursor = 'pointer';
+        }
         const levelClass = (item.level || 'custom').toLowerCase();
         card.innerHTML = `
             <span class="tag ${levelClass}">${item.level || 'Custom'}</span>
             <h3 style="margin:0 0 10px 0">${item.title}</h3>
             <p style="color:#666; margin:0">${(item.text || '').split(/\.|!|\?/).filter(s=>s.trim()).length} sentences</p>
         `;
+
+        // If this is a user-created topic (appended after preloadedLibrary), add delete button
+        const isUserTopic = index >= preloadedLibrary.length;
+        if (isUserTopic) {
+            const del = document.createElement('button');
+            del.className = 'delete-btn';
+            del.title = 'Delete topic';
+            del.innerText = '❌';
+            del.onclick = (e) => { e.stopPropagation(); deleteTopic(index); };
+            card.appendChild(del);
+            if (editMode) card.classList.add('editing');
+        }
         grid.appendChild(card);
     });
+}
+
+function toggleEditMode() {
+    editMode = !editMode;
+    const btn = document.getElementById('btn-edit-topics');
+    if (btn) btn.innerText = editMode ? 'Done' : 'Edit';
+    renderTopics();
+}
+
+function deleteTopic(index) {
+    // Only allow deleting user topics
+    if (index < preloadedLibrary.length) {
+        return alert('Cannot delete preloaded topic.');
+    }
+    if(!confirm('Delete this topic? This action cannot be undone.')) return;
+    const users = loadUserTopics();
+    const userIndex = index - preloadedLibrary.length;
+    if (userIndex >= 0 && userIndex < users.length) {
+        users.splice(userIndex, 1);
+        saveUserTopics(users);
+        buildLibrary();
+        renderTopics();
+    }
 }
 
 function init() {

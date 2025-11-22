@@ -42,6 +42,76 @@ h1 { margin: 0; color: var(--primary); }
     gap: 20px;
 }
 
+.topics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card { position: relative; overflow: visible; }
+
+.delete-btn {
+    position: absolute;
+    /* float slightly outside the card's top-right corner */
+    top: -10px;
+    right: -10px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+    line-height: 1;
+    z-index: 10;
+    transition: transform 180ms cubic-bezier(.2,.8,.2,1),
+                background-color 180ms ease,
+                color 180ms ease,
+                opacity 200ms ease,
+                box-shadow 180ms ease;
+    display: flex;
+    opacity: 0;
+    transform: scale(0.8) translateY(4px);
+    pointer-events: none;
+}
+
+.card.editing .delete-btn {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+.delete-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.delete-btn:active { transform: scale(0.96); }
+
+/* default icon: subtle border, on hover show red background and white icon */
+.delete-btn:hover, .delete-btn:focus {
+    background: #ef4444;
+    color: #fff;
+    border-color: rgba(0,0,0,0.06);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+}
+
+/* Edit button in header — slightly more modern */
+.topics-header #btn-edit-topics {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.topics-header #btn-edit-topics:hover {
+    transform: translateY(-1px);
+}
+
+.card[disabled] { cursor: default; opacity: 0.95; }
+
 .card {
     background: var(--card);
     border-radius: 8px;
